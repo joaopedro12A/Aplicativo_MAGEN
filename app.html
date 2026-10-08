@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#0B1220">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MAGEN | App</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body data-route="splash">
+
+<div class="screen on" id="s-splash">
+  <img class="splash-art" src="splash.jpg" alt="MAGEN">
+  <div class="ring" role="status" aria-label="Carregando"></div>
+</div>
+
+<div class="screen" id="s-onb">
+  <button class="skip" id="skip">Pular</button>
+  <div class="vp"><div class="slides" id="slides">
+    <article class="slide act">
+      <div class="art"><svg viewBox="0 0 200 140" aria-hidden="true">
+        <g stroke="#fff" stroke-opacity=".12"><path d="M10 35h180M10 70h180M10 105h180"/></g>
+        <path class="w" style="animation-delay:0s" stroke="#CFE0FF" d="M10 70h25l10-35 13 70 12-55 12 38 13-18h25l12-28 13 56 13-32 32 4"/>
+        <path class="w" style="animation-delay:.35s" stroke="#5EE0FF" d="M10 92q30-32 60 0t60 0 60 0"/>
+        <path class="w" style="animation-delay:.7s" stroke="#7DB2FF" d="M10 48q35-22 70 0t70 0 40 0"/>
+      </svg></div>
+      <h2>Leitura em tempo real</h2>
+      <p>O sensor do protótipo mede vibração e inclinação da estrutura e envia os dados direto para o seu celular.</p>
+    </article>
+    <article class="slide">
+      <div class="art"><svg viewBox="0 0 200 140" aria-hidden="true">
+        <path d="M30 110A70 70 0 0 1 170 110" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="16"/>
+        <path d="M30 110A70 70 0 0 1 170 110" fill="none" stroke="#34D399" stroke-width="16" stroke-dasharray="72 148"/>
+        <path d="M30 110A70 70 0 0 1 170 110" fill="none" stroke="#FBBF24" stroke-width="16" stroke-dasharray="72 148" stroke-dashoffset="-74"/>
+        <path d="M30 110A70 70 0 0 1 170 110" fill="none" stroke="#FF6B70" stroke-width="16" stroke-dasharray="72 148" stroke-dashoffset="-148"/>
+        <g class="needle"><path d="M100 110 100 50" stroke="#fff" stroke-width="4" stroke-linecap="round"/></g>
+        <circle cx="100" cy="110" r="8" fill="#fff"/>
+        <g fill="#CFE0FF" font-size="9" font-family="sans-serif" text-anchor="middle"><text x="38" y="132">Normal</text><text x="100" y="132">Atenção</text><text x="162" y="132">Alerta</text></g>
+      </svg></div>
+      <h2>Estado da estrutura de relance</h2>
+      <p>Os valores viram três níveis: normal, atenção e alerta, com limites definidos pelo grupo.</p>
+    </article>
+    <article class="slide">
+      <div class="art"><svg viewBox="0 0 200 140" aria-hidden="true">
+        <circle class="rp" style="animation-delay:0s" cx="100" cy="70" r="22"/>
+        <circle class="rp" style="animation-delay:.85s" cx="100" cy="70" r="22"/>
+        <circle class="rp" style="animation-delay:1.7s" cx="100" cy="70" r="22"/>
+        <circle cx="100" cy="70" r="26" fill="#fff" fill-opacity=".14"/>
+        <g transform="translate(86 56) scale(1.17)"><g class="swing" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></g></g>
+      </svg></div>
+      <h2>Aviso assim que algo muda</h2>
+      <p>Quando a vibração passa do limite, o MAGEN notifica você e registra o evento na aba Alertas.</p>
+    </article>
+  </div></div>
+  <div class="dots" id="dots"><i class="on"></i><i></i><i></i></div>
+  <button class="cta" id="onb-next"><span>Continuar</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+</div>
+
+<div class="screen" id="s-name">
+  <div class="hero-ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+  <h1 class="h1">Como podemos te chamar?</h1>
+  <p class="sub">Usamos o seu nome para personalizar o painel de monitoramento.</p>
+  <div class="field"><input id="name-in" maxlength="24" autocomplete="given-name" placeholder=" "><label for="name-in">Seu nome</label></div>
+  <div class="spacer"></div>
+  <button class="cta" id="name-next" disabled><span>Continuar</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+</div>
+
+<div class="screen" id="s-notif">
+  <div class="spacer"></div>
+  <div class="bell-big"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="bellsw"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+  <h1 class="h1 c">Receba os alertas da estrutura</h1>
+  <p class="sub c">Ative as notificações para ser avisado quando a vibração ou a inclinação passarem do limite, mesmo com outra aba aberta.</p>
+  <p class="note" id="notif-msg" role="status"></p>
+  <div class="spacer"></div>
+  <button class="cta" id="notif-yes"><span>Permitir notificações</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+  <button class="ghost" id="notif-no">Agora não</button>
+</div>
+
+<div class="screen" id="s-login">
+  <div class="spacer"></div>
+  <img class="login-logo" src="logo.png" alt="Logo MAGEN">
+  <h1 class="h1 c">Entrar no MAGEN</h1>
+  <p class="sub c">Acesse o painel de monitoramento integrado da estrutura.</p>
+  <div class="field"><input id="login-name" maxlength="24" autocomplete="given-name" placeholder=" "><label for="login-name">Seu nome</label></div>
+  <div class="spacer"></div>
+  <button class="cta" id="login-btn" disabled><span>Entrar</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+</div>
+
+<div class="toast" id="toast" role="alert"></div>
+<div class="app">
+
+  <header class="top">
+    <div class="top-row">
+      <div class="brand">
+        <!-- Coloque o arquivo do logo na mesma pasta com o nome logo.png (ou mude o src) -->
+        <img class="logo" src="logo.png" alt="Logo MAGEN">
+        <div>
+          <h1>MAGEN</h1>
+          <p>Monitoramento de Integridade Estrutural</p>
+        </div>
+      </div>
+      <button class="bell" id="bell" aria-label="Ver alertas">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="dot" id="bell-dot" hidden></span>
+      </button>
+    </div>
+    <p class="welcome">Bem-vindo de volta, <b id="user-name">João</b></p>
+    <div class="conn" id="conn" data-state="connecting"><i></i><span id="conn-text">Conectando ao servidor...</span></div>
+  </header>
+
+  <main>
+    <!-- INÍCIO -->
+    <section class="view active" id="view-home">
+      <div class="summary card">
+        <div class="stat">
+          <span class="ico blue"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
+          <strong id="v-acc">--</strong>
+          <small>Aceleração (m/s²)</small>
+        </div>
+        <div class="stat">
+          <span class="ico violet"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 20 4"/><path d="M4 20h10"/></svg></span>
+          <strong id="v-tilt">--</strong>
+          <small>Inclinação (°)</small>
+        </div>
+        <div class="stat">
+          <span class="ico" id="status-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></svg></span>
+          <strong id="v-status">--</strong>
+          <small id="v-status-msg">Aguardando leituras</small>
+        </div>
+      </div>
+
+      <div class="head"><h2>Vibração em tempo real</h2><span class="live" id="live" hidden>Ao vivo</span></div>
+      <div class="card chart-card">
+        <canvas id="chart"></canvas>
+        <div class="legend">
+          <span><i style="background:#2F6FED"></i>Eixo X</span>
+          <span><i style="background:#1FA971"></i>Eixo Y</span>
+          <span><i style="background:#E5484D"></i>Eixo Z</span>
+        </div>
+      </div>
+
+      <div class="head"><h2>Últimas leituras</h2></div>
+      <ul class="list" id="readings"></ul>
+      <p class="empty" id="readings-empty">Nenhuma leitura ainda.</p>
+    </section>
+
+    <!-- ALERTAS -->
+    <section class="view" id="view-alerts">
+      <div class="head"><h2>Alertas recentes</h2></div>
+      <ul class="list" id="alerts"></ul>
+      <p class="empty" id="alerts-empty">Nenhum alerta até agora. Tudo certo!</p>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="view" id="view-about">
+      <div class="head"><h2>Sobre o projeto</h2></div>
+      <div class="card about">
+        <p>O MAGEN monitora a integridade de estruturas por meio de sensores e IoT.</p>
+        <p class="muted">Projeto de TCC, UNASP São Paulo</p>
+        <a class="btn" href="index.html">Ler o artigo do TCC</a>
+      </div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section class="view" id="view-settings">
+      <div class="head"><h2>Ajustes</h2></div>
+      <div class="card set">
+        <div class="row col">
+          <b>Nome</b>
+          <div class="inline"><input id="set-name" maxlength="24" aria-label="Nome"><button class="btn sm" id="save-name">Salvar</button></div>
+        </div>
+        <div class="row"><div><b>Notificações</b><span>Alertas da estrutura</span></div>
+          <button class="switch" id="sw-notif" role="switch" aria-checked="false" aria-label="Notificações"><i></i></button></div>
+        <div class="row"><div><b>Tema</b><span>Aparência do app</span></div>
+          <div class="seg" id="seg-theme"><button data-t="dark">Escuro</button><button data-t="light">Claro</button></div></div>
+      </div>
+      <button class="danger" id="logout">Sair do app</button>
+    </section>
+  </main>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="home">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>Início
+    </button>
+    <button class="tab" data-view="alerts">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>Alertas
+    </button>
+    <button class="tab" data-view="about">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>Sobre
+    </button>
+    <button class="tab" data-view="settings">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.1-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.5a2 2 0 0 1-1 1.8l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.1-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7V20a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.1.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.1-.1a2 2 0 0 1-1-1.8v-.5a2 2 0 0 1 1-1.7l.1-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.1.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Ajustes
+    </button>
+  </nav>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
