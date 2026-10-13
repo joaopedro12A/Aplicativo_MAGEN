@@ -111,31 +111,37 @@
   <main>
     <!-- INÍCIO -->
     <section class="view active" id="view-home">
-      <div class="summary card">
-        <div class="stat">
-          <span class="ico blue"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
-          <strong id="v-acc">--</strong>
-          <small>Aceleração (m/s²)</small>
+      <div class="card gauge" id="gauge" data-state="idle">
+        <div class="g-ring" id="g-ring" role="img" aria-label="Integridade estrutural: aguardando leituras">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="g-track" cx="100" cy="100" r="84" pathLength="100"/>
+            <circle class="g-arc" id="g-arc" cx="100" cy="100" r="84" pathLength="100" transform="rotate(-90 100 100)"/>
+            <path class="g-tick" d="M172.3 123.5 187.5 128.4M55.3 161.5 45.9 174.4"/>
+          </svg>
+          <div class="g-center">
+            <strong><span id="g-num">--</span><sup id="g-pct" hidden>%</sup></strong>
+            <small>integridade</small>
+          </div>
         </div>
-        <div class="stat">
-          <span class="ico violet"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 20 4"/><path d="M4 20h10"/></svg></span>
-          <strong id="v-tilt">--</strong>
-          <small>Inclinação (°)</small>
+        <div class="g-status">
+          <span class="ico" id="g-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></svg></span>
+          <div><b id="g-label">Sem leitura</b><span id="g-msg">Aguardando leituras</span></div>
         </div>
-        <div class="stat">
-          <span class="ico" id="status-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></svg></span>
-          <strong id="v-status">--</strong>
-          <small id="v-status-msg">Aguardando leituras</small>
-        </div>
+        <ul class="g-scale" aria-label="Faixas de integridade">
+          <li class="ok"><i></i>60 a 100 Normal</li>
+          <li class="warn"><i></i>30 a 59 Atenção</li>
+          <li class="bad"><i></i>0 a 29 Alerta</li>
+        </ul>
       </div>
 
-      <div class="head"><h2>Vibração em tempo real</h2><span class="live" id="live" hidden>Ao vivo</span></div>
-      <div class="card chart-card">
-        <canvas id="chart"></canvas>
-        <div class="legend">
-          <span><i style="background:#2F6FED"></i>Eixo X</span>
-          <span><i style="background:#1FA971"></i>Eixo Y</span>
-          <span><i style="background:#E5484D"></i>Eixo Z</span>
+      <div class="card sim" id="sim" hidden>
+        <div class="sim-top"><b>Simulação</b><output id="sim-val" for="sim-range">100%</output></div>
+        <input type="range" id="sim-range" min="0" max="100" value="100" aria-label="Integridade simulada">
+        <div class="sim-btns">
+          <button class="chip ok" data-v="90">Normal</button>
+          <button class="chip warn" data-v="45">Atenção</button>
+          <button class="chip bad" data-v="15">Alerta</button>
+          <button class="chip auto" id="sim-auto" aria-pressed="false">Automático</button>
         </div>
       </div>
 
