@@ -10,8 +10,8 @@ const CONFIG = {
 
   // Endereço do backend. Vazio = automático: mesmo IP da página, porta 8080.
   // Backend hospedado (Render): "wss://seu-backend.onrender.com"
-  WS_URL: "",
-  WS_PORT: 8080,
+  INTERVALO_BACKEND_MS: 3000, 
+  SEM_DADOS_MS: 120000,
 
   // true = dados simulados, sem ESP nem backend. Também funciona abrindo app.html?demo
   DEMO: false,
