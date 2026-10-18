@@ -6,7 +6,7 @@
   2) Tela do nome:  usuarioSalvo()  e  cadastrarUsuario(nome)
   3) Home:          iniciarMonitoramento(aoAtualizar, aoFalhar)
 */
-const API_URL = "https://SEU-CODESPACE-3000.app.github.dev"; // <- trocar
+const API_URL = "https://expert-barnacle-q7vvxxqw55rq265w9-3000.app.github.dev"; // <- trocar
 const DISPOSITIVO_ID = 126;
 const CHAVE_USUARIO = "magen_usuario";
 
