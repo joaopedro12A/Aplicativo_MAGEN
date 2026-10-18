@@ -8,10 +8,9 @@ const CONFIG = {
   // false = o app calcula sozinho com os limites abaixo.
   USAR_PROCESSAMENTO: true,
 
-  // Endereço do backend. Vazio = automático: mesmo IP da página, porta 8080.
-  // Backend hospedado (Render): "wss://seu-backend.onrender.com"
-  INTERVALO_BACKEND_MS: 3000, 
-  SEM_DADOS_MS: 120000,
+  // O endereço do backend fica no api.js (API_URL). Aqui só o ritmo da consulta.
+  INTERVALO_BACKEND_MS: 3000,  // a cada quanto tempo perguntar o status ao backend
+  SEM_DADOS_MS: 120000,        // sem coleta nova por esse tempo = "sem dados do sensor"
 
   // true = dados simulados, sem ESP nem backend. Também funciona abrindo app.html?demo
   DEMO: false,
@@ -30,14 +29,13 @@ const CONFIG = {
 };
 
 /*
-  Formato esperado de cada mensagem do backend (JSON):
-  { "ax": 0.12, "ay": -0.05, "az": 9.81 }
-  Opcionais: "tilt" (graus) e "status" ("normal" | "atencao" | "alerta").
-  Se não vierem, o app calcula.
-
-  Resultado do processamento (tipo "resultado") pode trazer "integridade" (0 a 100).
-  Se não vier, o app calcula a partir de vib_max e inclinacao_max.
+  O app consulta o backend (api.js -> GET /api/status/:id) e recebe o resultado do processamento:
+  integridade (0 a 100) e nivel (normal | atencao | alerta). Se o nivel não for reconhecido,
+  o status é decidido pela porcentagem.
   Faixas: 60-100 normal (verde) | 30-59 atenção (amarelo) | 0-29 alerta (vermelho).
+
+  Modo demonstração (?demo) ainda aceita mensagens no formato { "ax": 0.12, "ay": -0.05, "az": 9.81 }
+  com opcionais "tilt" (graus) e "status" ("normal" | "atencao" | "alerta").
 */
 
 /* ============ ESTADO ============ */
@@ -53,7 +51,7 @@ const ICON = {
   bad: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v6M12 17h.01"/></svg>'
 };
 let readings = [], alerts = [];
-let lastData = 0, lastReading = 0, lastAlert = 0, lastGauge = 0, unseen = false, ws = null;
+let lastData = 0, lastReading = 0, lastAlert = 0, lastGauge = 0, unseen = false;
 const sim = location.search.includes("sim");   // index.html?sim = controle manual do círculo
 const demo = CONFIG.DEMO || location.search.includes("demo") || sim;
 
@@ -63,27 +61,40 @@ function setConn(state, text) {
   $("conn-text").textContent = text;
 }
 
-function wsUrl() {
-  if (CONFIG.WS_URL) return CONFIG.WS_URL;
-  const proto = location.protocol === "https:" ? "wss://" : "ws://";
-  return proto + (location.hostname || "localhost") + ":" + CONFIG.WS_PORT;
+/* Backend: consulta o status por HTTP (api.js) em vez de WebSocket */
+const NIVEL_PARA_STATUS = { normal: "normal", atencao: "atencao", "atenção": "atencao", alerta: "alerta", critico: "alerta", "crítico": "alerta" };
+let ultimaColeta = null, timerBackend = 0;
+
+async function consultarBackend() {
+  try {
+    const s = await buscarStatus();
+    if (s.id_coleta === ultimaColeta) return;   // nada novo desde a última consulta
+    ultimaColeta = s.id_coleta;
+    lastData = Date.now();
+    setConn("on", "Conectado ao servidor");
+    handleResultado({
+      status: NIVEL_PARA_STATUS[String(s.nivel || "").toLowerCase()] || statusPorPct(s.integridade),
+      integridade: s.integridade,
+      vib_max: s.rms,
+      inclinacao_max: 0
+    });
+  } catch (e) {
+    ultimaColeta = null;   // ao voltar a conexão, reaplica o último status
+    if (e.message && e.message.includes("sem coletas")) {
+      setConn("on", "Servidor ok, sem dados do sensor");
+      setGauge(null, null, "Aguardando leituras");
+    } else {
+      setConn("off", "Sem conexão. Verifique o Wi-Fi.");
+      setGauge(null, null, "Sem conexão");
+    }
+  }
 }
 
 function connect() {
   setConn("connecting", "Conectando ao servidor...");
-  try { ws = new WebSocket(wsUrl()); }
-  catch (e) { setConn("off", "Sem conexão. Verifique o Wi-Fi."); return setTimeout(connect, 2000); }
-
-  ws.onopen = () => setConn("on", "Conectado ao servidor");
-  ws.onmessage = (ev) => {
-    try { const m = JSON.parse(ev.data); m.tipo === "resultado" ? handleResultado(m) : handleData(m); } catch (e) { /* ignora mensagem inválida */ }
-  };
-  ws.onclose = () => {
-    setConn("off", "Sem conexão. Verifique o Wi-Fi.");
-    setGauge(null, null, "Sem conexão");
-    setTimeout(connect, 2000);
-  };
-  ws.onerror = () => ws.close();
+  consultarBackend();
+  clearInterval(timerBackend);
+  timerBackend = setInterval(consultarBackend, CONFIG.INTERVALO_BACKEND_MS);
 }
 
 /* ============ DADOS ============ */
@@ -261,8 +272,8 @@ function startSim() {
 /* ============ INÍCIO ============ */
 renderList("readings", readings);
 renderList("alerts", alerts);
-setInterval(() => { // sem dados do sensor há 5 s
-  if (!demo && $("conn").dataset.state === "on" && lastData && Date.now() - lastData > 5000) {
+setInterval(() => { // sem coleta nova do sensor por um bom tempo
+  if (!demo && $("conn").dataset.state === "on" && lastData && Date.now() - lastData > CONFIG.SEM_DADOS_MS) {
     setConn("connecting", "Servidor ok, sem dados do sensor");
     setGauge(null, null, "Sem dados do sensor");
   }
@@ -337,7 +348,12 @@ track.addEventListener("touchend", (e) => {
 /* nome, notificações e login */
 const enterKey = (input, btn) => input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !btn.disabled) btn.click(); });
 $("name-in").addEventListener("input", (e) => { $("name-next").disabled = !e.target.value.trim(); });
-$("name-next").onclick = () => { setName($("name-in").value.trim()); go("notif"); };
+$("name-next").onclick = () => {
+  const nome = $("name-in").value.trim();
+  setName(nome);
+  cadastrarUsuario(nome).catch((e) => console.warn("Cadastro no backend falhou:", e.message)); // o app segue mesmo se falhar
+  go("notif");
+};
 enterKey($("name-in"), $("name-next"));
 
 $("notif-yes").onclick = async () => {
@@ -349,7 +365,12 @@ $("notif-yes").onclick = async () => {
 $("notif-no").onclick = () => { setNotif(false); enter(); };
 
 $("login-name").addEventListener("input", (e) => { $("login-btn").disabled = !e.target.value.trim(); });
-$("login-btn").onclick = () => { setName($("login-name").value.trim()); me.session = true; store.set("session", true); go("app"); };
+$("login-btn").onclick = () => {
+  const nome = $("login-name").value.trim();
+  setName(nome);
+  if (!usuarioSalvo()) cadastrarUsuario(nome).catch((e) => console.warn("Cadastro no backend falhou:", e.message));
+  me.session = true; store.set("session", true); go("app");
+};
 enterKey($("login-name"), $("login-btn"));
 
 /* ajustes */
